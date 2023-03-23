@@ -12,5 +12,6 @@ for idx,move in enumerate(control):
     next = [i+j for i,j in zip(now,control_map.get(move))]
     if (-1<next[0]<n) and (-1<next[1]<n):
         now = next
+        
 now = [i+1 for i in now]
 print(now)  
