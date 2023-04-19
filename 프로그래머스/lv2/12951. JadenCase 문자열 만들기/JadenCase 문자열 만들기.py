@@ -1,25 +1,18 @@
 def solution(s):
     answer = ''
     
-    Flag = False
-    tmp = []
-    for i in range(len(s)):
-        if Flag == False:
-            if s[i].isdigit():
-                tmp.append(s[i])
-                Flag = True
-            elif s[i].isalpha():
-                tmp.append(s[i].upper())
-                Flag = True
-            else:
-                tmp.append(s[i])
-                Flag = False
+    words = list(s.split())
+    for i in range(len(words)):
+        if words[i][0].isalpha():
+            tmp = ""
+            tmp += words[i][0].upper()
+            tmp += words[i][1:].lower()
+            answer += tmp
         else:
-            if s[i].isalpha():
-                tmp.append(s[i].lower())
-            else:
-                tmp.append(s[i])
-                Flag = False
-                
-    answer = "".join(tmp)
+            tmp = ""
+            tmp += words[i][0]
+            tmp += words[i][1:].lower()
+            answer += tmp
+        answer+= " "
+    answer = answer.rstrip()
     return answer
