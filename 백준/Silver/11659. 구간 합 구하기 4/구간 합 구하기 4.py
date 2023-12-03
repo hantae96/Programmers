@@ -1,18 +1,20 @@
 import sys
-
-#sys.stdin = open("input.txt")
 input = sys.stdin.readline
+# sys.stdin = open("input.txt","r")
 
-n, m = map(int, input().split())
 
-arr = list(map(int, input().split()))
+n,m = map(int,input().split())
+lst = list(map(int,input().split()))
+sum_list = [lst[0]]
+for i in range(1,len(lst)):
+    sum_list.append(sum_list[i-1] + lst[i])
 
-dp = [arr[0]]
-for i in range(1, len(arr)):
-    dp.append(dp[i - 1] + arr[i])
 
-dp.insert(0, 0)
+for i in range(m):
+    s,e = [int(x) -1 for x in input().split()]
+    if (s == 0):
+        print(sum_list[e])
+    else:
+        print(sum_list[e] - sum_list[s-1])
 
-for _ in range(m):
-    s, e = map(int, input().split())
-    print(dp[e] - dp[s - 1])
+    
