@@ -1,61 +1,80 @@
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int m = sc.nextInt();
-        int answer = 0;
+    static int n,m,answer;
+    static int[][] map;
+    static int[][] visited;
 
-        int[] dx = new int[]{-1, 1, 0, 0};
-        int[] dy = new int[]{0, 0, -1, 1};
-        int[][] map = new int[n][m];
-        boolean[][] visited = new boolean[n][m]; // 방문 여부 체크용 배열
+    static class Node{
+        public int x;
+        public int y;
 
-        for (int i = 0; i < n; i++) {
-            String temp = sc.next();
-            for (int j = 0; j < m; j++) {
+        public int count;
+
+        public Node(int x,int y, int count){
+            this.x = x;
+            this.y = y;
+            this.count = count;
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+
+        map = new int[n][m];
+        visited = new int[n][m];
+
+        for(int i = 0;i<n;i++){
+            String temp = br.readLine();
+            for(int j = 0;j<m;j++){
                 map[i][j] = temp.charAt(j) - '0';
             }
         }
 
-        Queue<Node> queue = new LinkedList<>();
-        queue.add(new Node(0, 0, 1)); // 초기 위치와 이동 단계
+        bfs(0,0);
 
-        while (!queue.isEmpty()) {
-            Node now = queue.remove();
 
-            // 도착 지점에 도달한 경우
-            if (now.x == n - 1 && now.y == m - 1) {
-                answer = now.move;
+    }
+
+    public static void bfs(int x, int y){
+        LinkedList<Node> queue = new LinkedList<>();
+        visited[x][y] = 1;
+
+        queue.add(new Node(x,y,1));
+
+        int[] dx = new int[]{-1,1,0,0};
+        int[] dy = new int[]{0,0,-1,1};
+
+        while(!queue.isEmpty()){
+            Node current = queue.pop();
+            if(current.x == n-1 && current.y == m-1){
+                System.out.println(current.count);
                 break;
             }
 
-            for (int i = 0; i < 4; i++) {
-                int nx = now.x + dx[i];
-                int ny = now.y + dy[i];
-                if (nx >= 0 && nx < n && ny >= 0 && ny < m && map[nx][ny] == 1 && !visited[nx][ny]) {
-                    visited[nx][ny] = true; // 방문 처리
-                    queue.add(new Node(nx, ny, now.move + 1)); // 현재 이동 단계 +1
+            for(int i = 0;i<4;i++){
+                int nx = current.x + dx[i];
+                int ny = current.y + dy[i];
+
+                if(0 > nx || nx > n-1 ||  0  > ny || ny > m-1){
+                    continue;
                 }
+
+                if(visited[nx][ny] == 1 || map[nx][ny] == 0){
+                    continue;
+                }
+
+                visited[nx][ny] = 1;
+                queue.add(new Node(nx,ny,current.count + 1));
             }
-        }
-
-        System.out.println(answer);
-    }
-
-    static class Node {
-        int x;
-        int y;
-        int move;
-
-        public Node(int x, int y, int move) {
-            this.x = x;
-            this.y = y;
-            this.move = move;
         }
     }
 }
