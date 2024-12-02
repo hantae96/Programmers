@@ -4,45 +4,54 @@ class Solution {
     public int[] solution(int[] answers) {
         
         
-        int [] one = new int[]{1,2,3,4,5};
-        int [] two = new int[]{2,1,2,3,2,4,2,5};
-        int [] three = new int[]{3,3,1,1,2,2,4,4,5,5};
+        int a = 0;
+        int b = 0;
+        int c = 0;
         
         
-        int[] count = new int[3];
+        ArrayList<Integer> list1 = new ArrayList<>(Arrays.asList(1,2,3,4,5));
+        ArrayList<Integer> list2 = new ArrayList<>(Arrays.asList(2,1,2,3,2,4,2,5));
+        ArrayList<Integer> list3 = new ArrayList<>(Arrays.asList(3,3,1,1,2,2,4,4,5,5));
         
         for(int i = 0;i<answers.length;i++){
-            int oneIndex = i%(one.length);
-            int twoIndex = i%(two.length);
-            int threeIndex = i%(three.length);
+            int aIdx = i%list1.size();
+            int bIdx = i%list2.size();    
+            int cIdx = i%list3.size();    
+
+            if(list1.get(aIdx) == answers[i]){
+                a++;
+            }
             
-            if(answers[i] == one[oneIndex]){
-                count[0]++;
+            if(list2.get(bIdx) == answers[i]){
+                b++;
             }
-            if(answers[i] == two[twoIndex]){
-                                count[1]++;
+            
+            if(list3.get(cIdx) == answers[i]){
+                c++;
             }
-            if(answers[i] == three[threeIndex]){
-                count[2]++;
-            }  
         }
+        
+        List<Integer> list = new ArrayList<>(Arrays.asList(a,b,c));
         
         int max = -1;
-        for(int i = 0;i<3;i++){
-            if(max < count[i]){
-                max = count[i];
+        int maxIdx = -1;
+        for(int i = 0;i<list.size();i++){
+            if(max < list.get(i)){
+                max = list.get(i);
+                maxIdx = i;
             }
         }
-
-        List<Integer> temp = new ArrayList<>();
-        for(int i = 0;i<3;i++){
-            if(max == count[i]){
-                temp.add(i+1);
+        
+        List<Integer> answer = new ArrayList<>();
+        for(int i = 0; i<list.size();i++){
+            if(list.get(i) == max){
+                answer.add(i+1);
             }
         }
-
         
         
-        return temp.stream().sorted().mapToInt(Integer::intValue).toArray();
+        Collections.sort(answer);
+        
+        return answer.stream().mapToInt(Integer::intValue).toArray();
     }
 }
