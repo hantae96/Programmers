@@ -33,11 +33,11 @@ public class Main {
             graph[b].add(a);
         }
 
-        // DFS 탐색 시작
+        // DFS 탐색
         for (int i = 0; i < n; i++) {
-            dfs(i, 1); // 깊이 1부터 시작
-            if (arrive) {
-                break; // 도달 시 종료
+            if (dfs(i) >= 5) { // 깊이가 5 이상이면 조건 만족
+                arrive = true;
+                break;
             }
         }
 
@@ -49,22 +49,23 @@ public class Main {
         }
     }
 
-    static void dfs(int number, int depth) {
-        if (depth == 5) { // 깊이가 5일 경우 도달 성공
-            arrive = true;
-            return;
-        }
-
+    // DFS: 깊이를 반환
+    static int dfs(int number) {
         visited[number] = true; // 방문 처리
 
-        // 현재 노드의 인접 노드 탐색
+        int maxDepth = 1; // 현재 노드 깊이
+
         for (Integer friend : graph[number]) {
-            if (!visited[friend]) { // 방문하지 않은 경우만 탐색
-                dfs(friend, depth + 1);
-                if (arrive) return; // 도달하면 조기 종료
+            if (!visited[friend]) { // 방문하지 않은 노드만 탐색
+                int depth = dfs(friend) + 1; // 깊이를 계산하면서 재귀 호출
+                if (depth >= 5) { // 깊이가 5 이상이면 조기 종료
+                    return depth;
+                }
+                maxDepth = Math.max(maxDepth, depth); // 최대 깊이 갱신
             }
         }
 
-        visited[number] = false; // 백트래킹 - 방문 상태 복구
+        visited[number] = false; // 백트래킹
+        return maxDepth; // 최대 깊이를 반환
     }
 }
