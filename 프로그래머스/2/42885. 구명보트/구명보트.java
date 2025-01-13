@@ -14,13 +14,10 @@ class Solution {
             int sum = people[max];
             max--;
             answer++;
-            int count = 1;
             
-            while(sum + people[min] <= limit && count <2){
+            if(sum + people[min] <= limit){
                 sum += people[min];
                 min++;
-                count++;
-                
             }
         }
         
