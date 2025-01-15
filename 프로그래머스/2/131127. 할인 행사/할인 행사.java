@@ -3,33 +3,36 @@ import java.util.*;
 class Solution {
     public int solution(String[] want, int[] number, String[] discount) {
         int answer = 0;
-        HashMap<String,Integer> map = new HashMap<String,Integer>();
+        
+        HashMap<String,Integer> map = new HashMap<>();
+        
         for(int i = 0;i<want.length;i++){
-            String key = want[i];
-            Integer value = number[i];
-            map.put(key,value);                        
+            map.put(want[i],number[i]);
         }
         
         
-        int startRange = discount.length - 9;
-        for(int i = 0;i<startRange;i++){
-            HashMap<String,Integer> temp = new HashMap<String,Integer>(map);
-            boolean check = true;
-            for(int j = i;j<i+10;j++){
-                String key = discount[j];
-                if(!temp.containsKey(key)){
-                    check = false;
+        for(int start = 0;start<=discount.length-10;start++){
+            HashMap<String,Integer> copy = new HashMap<>(map);
+            boolean flag = true;
+            for(int i = start;i<start+10;i++){
+                if(!copy.containsKey(discount[i])){
+                    flag = false;
                     break;
                 }
-                int value = temp.get(key);
-                if(value == 0){
-                    check = false;
+                
+                int value = copy.get(discount[i]);
+                copy.put(discount[i],--value);
+            }
+                        
+            
+            for(Map.Entry<String,Integer> entry : copy.entrySet()){
+                if(entry.getValue() > 0){
+                    flag = false;
                     break;
                 }
-                temp.put(key,--value);
             }
             
-            if(check){
+            if(flag){
                 answer++;
             }
         }
