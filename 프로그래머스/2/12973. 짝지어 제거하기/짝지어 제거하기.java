@@ -1,31 +1,12 @@
-import java.util.*;
-
 class Solution
 {
     public int solution(String s)
     {
+        int answer = -1;
 
-        Stack<Character> stack = new Stack<>();
-        
-        int idx = 0;
-        while(idx < s.length()){
-            Character c = s.charAt(idx);
-            if(stack.isEmpty()){
-                stack.push(c);
-            }else{
-                if(stack.peek() == c){
-                    stack.pop();
-                }else{
-                    stack.push(c);
-                }
-            }
-            idx++;
-        }
+        // [실행] 버튼을 누르면 출력 값을 볼 수 있습니다.
+        System.out.println("Hello Java");
 
-        if(stack.isEmpty()){
-            return 1;
-        }else{
-            return 0;
-        }
+        return answer;
     }
 }
