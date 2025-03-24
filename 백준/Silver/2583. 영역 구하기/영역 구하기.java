@@ -1,86 +1,83 @@
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Main {
-
-    static int m,n,k,sum;
+    static boolean[][] visited;
     static int[][] map;
-    static int[][] visited;
 
+    static int m,n;
     static int[] dx = new int[]{-1,1,0,0};
     static int[] dy = new int[]{0,0,-1,1};
 
-    public static void main(String[] args) throws IOException {
-        Scanner sc = new Scanner(System.in);
+    public static void main(String[] args) throws Exception {
 
-        m = sc.nextInt();
-        n = sc.nextInt();
-        k = sc.nextInt();
-        sc.nextLine();
+        int answer=  0;
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        m = Integer.parseInt(st.nextToken());
+        n = Integer.parseInt(st.nextToken());
+        int k = Integer.parseInt(st.nextToken());
 
+        visited = new boolean[m][n];
         map = new int[m][n];
-        visited = new int[m][n];
 
-        for(int i = 0;i<k;i++){
-            int [] input = Arrays.stream(sc.nextLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-            int[] startPos = new int[]{input[0],input[1]};
-            int[] endPos = new int[]{input[2],input[3]};
-            fill(startPos,endPos);
-        }
+        for(int i = 0; i<k;i++){
+            st = new StringTokenizer(br.readLine());
+            int downX = Integer.parseInt(st.nextToken());
+            int downy = Integer.parseInt(st.nextToken());
 
-        int count = 0;
-        List<Integer> areaList = new ArrayList<>();
+            int upX = Integer.parseInt(st.nextToken());
+            int upY = Integer.parseInt(st.nextToken());
 
-        for(int y = 0;y<m;y++){
-            for(int x = 0; x<n;x++){
-                if(map[y][x] > 0) continue;
-                if(visited[y][x] == 1) continue;
-                count++;
-//                dfs(y,x);
-                areaList.add(dfs(y,x));
+            for(int x = downX;x<upX;x++){
+                for(int y = downy;y<upY;y++){
+                    map[y][x] = 1;
+                }
             }
         }
 
-        System.out.println(count);
 
-        Collections.sort(areaList);
-        for(int elem : (areaList)){
-            System.out.printf("%d ",elem);
+
+        int split = 0;
+        ArrayList<Integer> list = new ArrayList<>();
+        for(int i = 0;i<m;i++){
+            for(int j = 0;j<n;j++){
+                if(visited[i][j] || map[i][j] == 1){
+                    continue;
+                }
+
+                visited[i][j] = true;
+                split++;
+                list.add(dfs(i,j));
+                }
+            }
+
+        System.out.println(split);
+        Collections.sort(list);
+        for(int i : list){
+            System.out.printf("%d ", i);
         }
     }
 
-    public static int dfs(int y,int x){
-        if(visited[y][x] == 1){
-            return 0;
-        }
-
-        visited[y][x] = 1;
-        int sum = 1;
-
+    static int dfs(int x, int y){
+        int count = 1;
         for(int i = 0;i<4;i++){
-            int ny = y + dy[i];
             int nx = x + dx[i];
+            int ny = y + dy[i];
 
-            if(0>ny || ny >= m || 0> nx || nx >= n) continue;
-            if(map[ny][nx] > 0) continue;
+            if(0 > nx || nx >= m || 0 > ny || ny >= n) continue;
+            if(visited[nx][ny]) continue;
+            if(map[nx][ny] == 1) continue;
 
-            sum += dfs(ny,nx);
+            visited[nx][ny] = true;
+            count += dfs(nx,ny);
         }
 
-        return sum;
+        return count;
     }
 
 
-    public static void fill(int[] startPos, int[] endPos){
-        for(int y = startPos[1];y<endPos[1];y++){
-            for(int x = startPos[0];x<endPos[0];x++){
-                map[y][x] = ++map[y][x];
-            }
-        }
-    }
 
 }
-
