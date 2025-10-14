@@ -1,69 +1,88 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
         int s = Integer.parseInt(st.nextToken());
         int p = Integer.parseInt(st.nextToken());
-
         String dna = br.readLine();
+
         int answer = 0;
 
+        // 기준 설정
         st = new StringTokenizer(br.readLine());
-
-        HashMap<Character, Integer> required = new HashMap<>();
-        required.put('A', Integer.parseInt(st.nextToken()));
-        required.put('C', Integer.parseInt(st.nextToken()));
-        required.put('G', Integer.parseInt(st.nextToken()));
-        required.put('T', Integer.parseInt(st.nextToken()));
-
-        HashMap<Character, Integer> current = new HashMap<>();
-        current.put('A', 0);
-        current.put('C', 0);
-        current.put('G', 0);
-        current.put('T', 0);
-
-        // 초기 슬라이딩 윈도우 설정
-        for (int i = 0; i < p; i++) {
-            char c = dna.charAt(i);
-            current.put(c, current.get(c) + 1);
+        int[] standard = new int[4];
+        for(int i = 0;i<4;i++){
+            standard[i] = Integer.parseInt(st.nextToken());
         }
 
-        // 조건 확인 함수
-        if (isValid(required, current)) {
+
+        // 초기값 설정
+        int[] temp = new int[4];
+        for(int i = 0;i< p;i++){
+            char c = dna.charAt(i);
+            add(c,temp);
+        }
+
+
+        if(check(temp,standard)){
             answer++;
         }
 
-        // 슬라이딩 윈도우 시작
-        for (int i = p; i < s; i++) {
-            char toAdd = dna.charAt(i); // 새로 추가할 문자
-            char toRemove = dna.charAt(i - p); // 제거할 문자
+        int sp = 0;
+        int lp = p - 1;
 
-            current.put(toAdd, current.get(toAdd) + 1);
-            current.put(toRemove, current.get(toRemove) - 1);
+        while(lp < s-1){
+            lp++;
+            add(dna.charAt(lp),temp);
+            remove(dna.charAt(sp),temp);
+            sp++;
 
-            if (isValid(required, current)) {
+            if(check(temp,standard)){
                 answer++;
             }
         }
 
+
         System.out.println(answer);
     }
 
-    // 조건 확인 함수
-    private static boolean isValid(HashMap<Character, Integer> required, HashMap<Character, Integer> current) {
-        for (Character c : required.keySet()) {
-            if (current.get(c) < required.get(c)) {
-                return false;
+    static void add(char c, int[] temp){
+        if(c == 'A')
+            temp[0] += 1;
+        if(c == 'C')
+            temp[1] += 1;
+        if(c == 'G')
+            temp[2] += 1;
+        if(c == 'T')
+            temp[3] += 1;
+    }
+
+    static void remove(char c, int[] temp){
+        if(c == 'A')
+            temp[0] -= 1;
+        if(c == 'C')
+            temp[1] -= 1;
+        if(c == 'G')
+            temp[2] -= 1;
+        if(c == 'T')
+            temp[3] -= 1;
+    }
+
+
+
+    static boolean check(int[] temp, int[] standard){
+        boolean isSame = true;
+        for(int i = 0;i<temp.length;i++){
+            if(temp[i] < standard[i]){
+                isSame = false;
+                break;
             }
         }
-        return true;
+
+        return isSame;
     }
 }
