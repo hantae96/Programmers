@@ -1,52 +1,47 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
 public class Main {
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         int n = Integer.parseInt(br.readLine());
-
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int[] array = new int[n];
-        for (int i = 0; i < n; i++) {
-            array[i] = Integer.parseInt(st.nextToken());
-        }
 
-        Arrays.sort(array); // nlogn
+        long[] arr = new long[n];
+        for (int i = 0; i < n; i++) arr[i] = Long.parseLong(st.nextToken());
+
+        Arrays.sort(arr);
+
+        // n < 3이면 어떤 수도 두 수의 합으로 만들 수 없음
+        if (n < 3) {
+            System.out.println(0);
+            return;
+        }
 
         int answer = 0;
 
-        for(int i = 0;i<n;i++){
-            int start = 0;
-            int end = n - 1;
+        // 각 i에 대해 arr[i]가 두 수의 합으로 표현 가능한지 검사
+        for (int i = 0; i < n; i++) {
+            long target = arr[i];
+            int l = 0, r = n - 1;
 
-            while(start < end && start >= 0 && end < n){
-                int sum = array[start] + array[end];
-                if(sum < array[i]){
-                    start++;
-                }else if(sum > array[i]){
-                    end--;
-                }else{
-                    if(start == i){
-                        start++;
-                        continue;
-                    }
+            while (l < r) {
+                // 자기 자신은 제외
+                if (l == i) { l++; continue; }
+                if (r == i) { r--; continue; }
 
-                    if(end == i){
-                        end--;
-                        continue;
-                    }
-                    // 10이 없음
-                    answer+=1;
-                    break;
+                long sum = arr[l] + arr[r];
+
+                if (sum == target) {
+                    answer++;
+                    break;               // 해당 i는 찾았으니 다음 i로
+                } else if (sum < target) {
+                    l++;                  // 더 크게
+                } else {
+                    r--;                  // 더 작게
                 }
             }
-
-
         }
 
         System.out.println(answer);
