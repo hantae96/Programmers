@@ -1,80 +1,72 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Main {
-
-    static int n,m,answer;
-    static int[][] map;
     static int[][] visited;
-
-    static class Node{
-        public int x;
-        public int y;
-
-        public int count;
-
-        public Node(int x,int y, int count){
-            this.x = x;
-            this.y = y;
-            this.count = count;
-        }
-    }
-
-    public static void main(String[] args) throws Exception {
+    static int[][] map;
+    static int[] dx = new int[]{-1,1,0,0};
+    static int[] dy = new int[]{0,0,-1,1};
+    static int n;
+    static int m;
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
         StringTokenizer st = new StringTokenizer(br.readLine());
 
         n = Integer.parseInt(st.nextToken());
         m = Integer.parseInt(st.nextToken());
 
-        map = new int[n][m];
         visited = new int[n][m];
+        map = new int[n][m];
 
         for(int i = 0;i<n;i++){
-            String temp = br.readLine();
+            String input = br.readLine();
             for(int j = 0;j<m;j++){
-                map[i][j] = temp.charAt(j) - '0';
+                map[i][j] = input.charAt(j) - '0';
             }
         }
 
-        bfs(0,0);
+        System.out.println(bfs(new Node(0,0))+1);
 
-
+//        for(int i = 0;i<n;i++){
+//            for(int j = 0;j<m;j++){
+//                System.out.printf("%d",visited[i][j]);
+//            }
+//            System.out.println();
+//        }
     }
 
-    public static void bfs(int x, int y){
+    static class Node {
+        int x;
+        int y;
+
+        public Node(int x,int y){
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+    static int bfs(Node node){
         LinkedList<Node> queue = new LinkedList<>();
-        visited[x][y] = 1;
+        queue.add(node);
 
-        queue.add(new Node(x,y,1));
 
-        int[] dx = new int[]{-1,1,0,0};
-        int[] dy = new int[]{0,0,-1,1};
-
-        while(!queue.isEmpty()){
-            Node current = queue.pop();
-            if(current.x == n-1 && current.y == m-1){
-                System.out.println(current.count);
-                break;
-            }
+        while (!queue.isEmpty()){
+            Node pop = queue.pop();
 
             for(int i = 0;i<4;i++){
-                int nx = current.x + dx[i];
-                int ny = current.y + dy[i];
+                int nx = dx[i] + pop.x;
+                int ny = dy[i] + pop.y;
 
-                if(0 > nx || nx > n-1 ||  0  > ny || ny > m-1){
-                    continue;
-                }
+                if(nx < 0 || nx >= n || ny < 0 || ny >= m) continue;
+                if(map[nx][ny] == 0)  continue;
+                if(visited[nx][ny] != 0) continue;
 
-                if(visited[nx][ny] == 1 || map[nx][ny] == 0){
-                    continue;
-                }
-
-                visited[nx][ny] = 1;
-                queue.add(new Node(nx,ny,current.count + 1));
+                visited[nx][ny] = visited[pop.x][pop.y] + 1;
+                queue.add(new Node(nx,ny));
             }
         }
+
+        return visited[n-1][m-1];
     }
 }
