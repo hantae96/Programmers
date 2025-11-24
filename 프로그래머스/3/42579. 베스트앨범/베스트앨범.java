@@ -1,48 +1,53 @@
 import java.util.*;
 
+class Node{
+    int value;
+    int idx;
+    
+    public Node(int value, int idx){
+        this.value = value;
+        this.idx = idx;
+    }
+}
+
 class Solution {
     public int[] solution(String[] genres, int[] plays) {
         List<Integer> answer = new ArrayList<>();
-        HashMap<String, Integer> genrePlayCount = new HashMap<>();
-        HashMap<String, List<int[]>> genreSongMap = new HashMap<>();
-
-        // 장르별 재생 수 합산 및 곡 정보 저장
-        for (int i = 0; i < genres.length; i++) {
-            String genre = genres[i];
-            int play = plays[i];
-
-            // 장르별 총 재생 횟수 합산
-            genrePlayCount.put(genre, genrePlayCount.getOrDefault(genre, 0) + play);
-
-            // 장르별 곡 정보 저장 (재생 수와 인덱스)
-            List<int[]> songs = genreSongMap.getOrDefault(genre, new ArrayList<>());
-            songs.add(new int[]{play, i});
-            genreSongMap.put(genre, songs);
+        
+        HashMap<String,Integer> map = new HashMap<>();
+        HashMap<String,List<Node>> detail = new HashMap<>();
+        
+        for(int i = 0; i<genres.length;i++){
+            
+            String s = genres[i];
+            int p = plays[i];
+            
+            int value = map.getOrDefault(s,0) + p;
+            map.put(s,value);
+            List<Node> list = detail.getOrDefault(s, new ArrayList<>());
+            list.add(new Node(p,i));
+            detail.put(s,list);
         }
-
-        // 장르별 재생 수 내림차순으로 정렬
-        List<Map.Entry<String, Integer>> genreList = new ArrayList<>(genrePlayCount.entrySet());
-        genreList.sort((entry1, entry2) -> Integer.compare(entry2.getValue(), entry1.getValue())); // 내림차순 정렬
-
-        // 결과 배열 구성
-        for (Map.Entry<String, Integer> entry : genreList) {
-            String genre = entry.getKey();
-            List<int[]> songs = genreSongMap.get(genre);
-
-            // 곡 재생 수 내림차순 정렬 (동일 재생 수일 경우 인덱스 기준으로 정렬)
-            songs.sort((a, b) -> {
-                if (a[0] == b[0]) {
-                    return Integer.compare(a[1], b[1]); // 인덱스 기준으로 정렬
-                }
-                return Integer.compare(b[0], a[0]); // 재생 수 기준으로 정렬
-            });
-
-            // 최대 두 곡 추가
-            for (int j = 0; j < Math.min(2, songs.size()); j++) {
-                answer.add(songs.get(j)[1]); // 인덱스를 추가
+        
+        List<String> keySet = new ArrayList<>(map.keySet());
+        
+        keySet.sort((o1,o2) -> map.get(o2) - map.get(o1));
+        
+      
+        
+        for(String key : keySet){
+            List<Node> values = detail.get(key);
+            values.sort((o1,o2) -> o2.value - o1.value);
+            
+            int idx = 0;
+            
+            while(idx < values.size() && idx < 2){
+                answer.add(values.get(idx).idx);
+                idx++;
             }
         }
-
-        return answer.stream().mapToInt(Integer::intValue).toArray();
+        
+        
+        return answer.stream().mapToInt(i -> i).toArray();
     }
 }
