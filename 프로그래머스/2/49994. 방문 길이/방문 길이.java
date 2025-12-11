@@ -1,77 +1,52 @@
 import java.util.*;
 
 class Solution {
-    static String convert(int x, int y){
-        return x + "" + y + "";
-    }
-    
-    static boolean check(int num){
-        if(num < -5 || num > 5){
-            return false;
-        }
-        return true;
-    }
-    
     public int solution(String dirs) {
         int answer = 0;
+
+        List<String> visited = new ArrayList<>();
+        int nowX = 0;
+        int nowY = 0;
         
-        ArrayList<String> list = new ArrayList<>();
-        
-        int x = 0;
-        int y = 0;
-        int nx = 0;
-        int ny = 0;
         for(char c : dirs.toCharArray()){
-            boolean flag = true;
+            int nextX = 0;
+            int nextY = 0;
             if(c == 'U'){
-                if(check(y+1)){
-                    ny = y+1;
-                }else{
-                    flag = false;
-                }
-            }
-            if(c == 'L'){
-                if(check(x-1)){
-                    nx = x-1;
-                }else{
-                    flag = false;
-                }
-            }
-            if(c == 'R'){
-                if(check(x+1)){
-                    nx = x+1;
-                }else{
-                    flag = false;
-                }
-            }
-            if(c == 'D'){
-                if(check(y-1)){
-                    ny = y-1;
-                }else{
-                    flag = false;
-                }
+                nextY = nowY + 1;
+                nextX = nowX;
+            }else if(c == 'L'){
+                nextX = nowX - 1;
+                nextY = nowY;
+            }else if(c == 'R'){
+                nextX = nowX +1;
+                nextY = nowY;
+                
+            }else if(c == 'D'){
+                nextY = nowY - 1;
+                nextX = nowX;
             }
             
-
-            if(!flag){
+            if(nextX < -5 || nextX > 5 || nextY < -5 || nextY > 5){
                 continue;
             }
             
-            String path = convert(x,y) + convert(nx,ny);
-            String path2 = convert(nx,ny) + convert(x,y);
+            
+            String right =  "" + nowX + nowY + nextX + nextY;
+            String left = "" + nextX + nextY + nowX + nowY;
             
             
-            if(!list.contains(path) && !list.contains(path2)){
+            
+            if(!visited.contains(right) && !visited.contains(left)){
+                System.out.println(c);
                 answer++;
+                visited.add(right);
+                visited.add(left);
             }
             
-            list.add(path);
-            list.add(path2);
-            x = nx;
-            y= ny;
+            nowX = nextX;
+            nowY = nextY;
         }
-        
-        
+            
         return answer;
     }
 }
