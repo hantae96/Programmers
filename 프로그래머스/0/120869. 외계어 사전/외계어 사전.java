@@ -2,17 +2,20 @@ import java.util.*;
 
 class Solution {
     public int solution(String[] spell, String[] dic) {
+        int answer = 0;
+        
         for(String word : dic){
-            int count = 0;
+            boolean flag = true;
             for(String s : spell){
-                if(word.contains(s)) count++;
+                if(!word.contains(s)){
+                    flag = false;
+                }
             }
             
-            if(count == spell.length){
-                System.out.println(word);
-                return 1;
-            }
+            if(flag) return 1;
         }
+        
+        
         return 2;
     }
 }
