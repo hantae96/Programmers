@@ -1,35 +1,45 @@
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
+
 
 public class Main {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
+        
         String input = br.readLine();
+        
         int answer = 0;
-        Stack<Integer> stack = new Stack<>();
-        for(int i = 0;i<input.length();i++){
+        int end = 0;
+        Stack<Character> stack = new Stack<>();
+
+        int i = 0;
+        while(i<input.length()){
             char c = input.charAt(i);
-            if(c == '('){
-                stack.push(i);
-            }else if(c == ')'){
-                if(stack.peek() + 1 == i){ // 괄호가 한칸차이가 나는 경우
-                    stack.pop();
-                    answer += stack.size();
-                }else{
-                    answer+=1;
-                    stack.pop();
-                }
+
+            if (c == '(' && input.charAt(i + 1) == ')') { // 레이저인 경우
+                answer += stack.size();
+                // System.out.println(stack.size());
+                i += 2;
+                continue;
             }
+            
+            if (c == '(') {
+                stack.push('(');
+                i++;
+            }
+
+            if (c == ')') {
+                answer += 1; // 꼬다리
+                stack.pop();
+                i++;
+            }
+
+
         }
+        
+        System.out.println(answer+end);
 
-        System.out.println(answer);
-
-
-
+        
     }
 }
