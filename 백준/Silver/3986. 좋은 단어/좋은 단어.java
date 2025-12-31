@@ -1,42 +1,37 @@
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
+
 public class Main {
-    public static void main(String[] args) throws Exception {
+
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        int answer = 0;
         int n = Integer.parseInt(br.readLine());
+        
+        int answer = 0;
 
-        for(int i = 0; i<n;i++){
-            String input = br.readLine();
+        for (int i = 0; i < n; i++) {
             Stack<Character> stack = new Stack<>();
+            String input = br.readLine();
 
-            for(int j =0;j<input.length();j++){
-                char c = input.charAt(j);
-
-                if(stack.isEmpty()){
+            for (char c : input.toCharArray()) {
+                if (stack.isEmpty()) {
                     stack.push(c);
                     continue;
                 }
 
-                if(stack.peek() == c){
+                if (stack.peek() == c) {
                     stack.pop();
-                }else{
+                } else {
                     stack.push(c);
                 }
             }
 
-        if(!stack.isEmpty()){
-            continue;
+            if (stack.isEmpty())
+                answer++;
+
         }
-        answer++;
-    }
 
-    System.out.println(answer);
-
+        System.out.println(answer);
     }
 }
