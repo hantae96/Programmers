@@ -1,30 +1,30 @@
 class Solution {
-
-    static int count = 0;
-    static int target;
-
+    static int answer,n,target;
+    static int[] numbers;
     public int solution(int[] numbers, int target) {
+        
         this.target = target;
-        count = 0; // 초기화
-
-        // DFS 시작
-        dfs(numbers, 0, 0);
-
-        return count;
+        this.n = numbers.length;
+        this.numbers = numbers;
+        
+        dfs(0,0);
+        
+        return answer;
     }
-
-    // DFS 메서드
-    static void dfs(int[] numbers, int idx, int sum) {
-        // 종료 조건: 모든 숫자를 사용했을 때
-        if (idx == numbers.length) {
-            if (sum == target) {
-                count++; // 목표값에 도달하면 count 증가
+    
+    
+    static void dfs(int sum,int depth){
+        if(depth == n){
+            // System.out.println(sum);
+            if(sum == target){
+                answer++;
+                return;
             }
+            
             return;
         }
-
-        // 현재 숫자를 더하거나 빼는 두 가지 경우로 탐색
-        dfs(numbers, idx + 1, sum + numbers[idx]); // 더하기
-        dfs(numbers, idx + 1, sum - numbers[idx]); // 빼기
+        
+        dfs(sum + numbers[depth],depth+1);
+        dfs(sum + (-1)*numbers[depth],depth+1);
     }
 }
